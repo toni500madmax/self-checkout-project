@@ -34,3 +34,53 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## ⚠️ Atenção ao usar Prisma com Next.js
+
+Este projeto utiliza **Next.js com TypeScript**, e isso traz uma particularidade importante ao executar scripts TypeScript diretamente com `ts-node` — como o `prisma/seed.ts`.
+
+### 🧠 Por quê?
+
+O Next.js usa configurações modernas no `tsconfig.json`:
+
+```jsonc
+// tsconfig.json
+"module": "esnext",
+"moduleResolution": "bundler"
+```
+
+### Há duas formas de resolver abaixo:
+
+### ✅ Forma simples:
+
+```jsonc
+// para ts-node
+"module": "commonjs",
+"moduleResolution": "node"
+```
+
+### ✅✅✅ Como resolver corretamente
+
+👉 Em vez de alterar o `tsconfig.json` principal (e quebrar o build do Next.js), criamos um `tsconfig` separado apenas para o script `seed.ts`.
+
+#### 1. Crie um arquivo: `tsconfig.seed.json`
+
+```json
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmit": true
+  },
+  "include": ["prisma/seed.ts"]
+}
+```
+
+#### 2. Adicione a regra no package.json
+
+```json
+"prisma": {
+  "seed": "ts-node --project tsconfig.seed.json ./prisma/seed.ts"
+}
+```
