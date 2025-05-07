@@ -38,7 +38,7 @@ const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
 
   return (
     <>
-      <div className="relative z-50 mt-[-1.5rem] rounded-t-3xl border bg-white">
+      <div className="relative z-50 mt-[-1.5rem] rounded-t-3xl bg-white">
         <div className="p-5">
             <div className="flex items-center gap-3">
                 <Image
@@ -58,7 +58,7 @@ const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
           </div>
         </div>
         <ScrollArea className="w-full">
-          <div className="flex w-max space-x-4 pt-4">
+          <div className="flex w-max space-x-4 p-4 pt-0">
             {restaurant.menuCategories.map((category) => (
               <Button
                 key={category.id}
@@ -73,6 +73,7 @@ const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
           </div>
           <ScrollBar orientation="horizontal" />
               </ScrollArea>
+              <h3 className="px-5 pt-2 font-semibold">{ selectedCategory.name}</h3>
               <Products products={selectedCategory.products}/>
       </div>
     </>
