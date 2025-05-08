@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { db } from "@/lib/prisma";
 
-import ProductDetails from './components/product.details';
+import ProductDetails from './components/product-details';
 import ProductHeader from "./components/product-header";
 
 interface ProductPageProps {
