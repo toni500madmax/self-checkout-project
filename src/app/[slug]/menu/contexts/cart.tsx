@@ -29,13 +29,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
     return (
         <CartContext.Provider
-      value={{
-        isOpen,
-        products,
-        toggleCart,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
+          value={{
+            isOpen,
+            products,
+            toggleCart,
+          }}
+        >
+          {children}
+      </CartContext.Provider>
     );
-}
+} 

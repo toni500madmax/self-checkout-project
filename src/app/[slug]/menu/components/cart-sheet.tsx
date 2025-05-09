@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 
 import { CartContext } from "../contexts/cart";
 
-export const CartSheet = () => {
+const CartSheet = () => {
     const { isOpen, toggleCart } = useContext(CartContext);
 
     return (
