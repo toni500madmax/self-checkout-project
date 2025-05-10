@@ -24,16 +24,16 @@ const CartSheet = () => {
                                 <CartProductItem key={product.id} product={product}/>
                             ))}
                         </div>
+                        <Card className="mb-6">
+                            <CardContent className="p-5">
+                                <div className="flex justify-between">
+                                    <p className="text-sm text-muted-foreground">Total</p>
+                                    <p className="font-semibold text-sm text-center">{ formatCurrency(total)}</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <Button className="w-full rounded-full">Finalizar Pedido</Button>
                     </div>
-                    <Card className="mb-6">
-                        <CardContent>
-                            <div className="flex justify-between">
-                                <p className="text-sm text-muted-foreground">Total</p>
-                                <p className="font-semibold text-sm">{ formatCurrency(total)}</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                    <Button className="w-full rounded-full">Finalizar Pedido</Button>
                 </SheetContent>
             </Sheet>
         </>
