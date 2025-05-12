@@ -53,7 +53,7 @@ const OrderList = ({ orders }: OrderListProps) => {
                         <div
                             className={
                                 `w-fit rounded-full px-2 py-1 texte-xs font-semibold 
-                                ${order.status === OrderStatus.FINISHED ? "bg-green-500 text-white" : order.status === OrderStatus.IN_PREPARATION ? "bg-gray-200 text-gray-500" : "bg-yellow-500 text-gray-500"}`
+                                ${order.status === OrderStatus.FINISHED ? "bg-green-500 text-white" : order.status === OrderStatus.IN_PREPARATION ? "bg-yellow-500 text-gray-500" : "bg-gray-200 text-gray-500"}`
                             }>
                             {getStatusLabel(order.status)}
                         </div>

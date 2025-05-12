@@ -83,7 +83,7 @@ const RestaurantCategories = ({ restaurant }: RestaurantCategoriesProps) => {
         <Products products={selectedCategory.products} />
         {products.length > 0 && (
           <div
-            className="fixed bottom-0 left-0 right-0 w-full items-center justify-between border-t bg-white px-5 py-3">
+            className="fixed bottom-0 left-0 right-0 w-full flex items-center justify-between border-t bg-white px-5 py-3">
               <div>
                 <p className="text-sm text-muted-foreground">
                   Total dos pedidos
