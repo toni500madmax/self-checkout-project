@@ -69,7 +69,7 @@ const ProductDetails = ({product}: ProductDetailsProps) => {
                         <h3 className="text-xl font-semibold">
                             {formatCurrency(product.price)}
                         </h3>
-                        <div className="flex items-center gap-3 text-cente">
+                        <div className="flex items-center gap-2 text-center">
                             <Button
                                 variant="outline"
                                 className="h-8 w-8 rounded-xl"
@@ -90,13 +90,19 @@ const ProductDetails = ({product}: ProductDetailsProps) => {
                     <ScrollArea className="h-full">
                         {/* Sobre */}
                         <div className="mt-6 space-y-3">
-                            <h4 className="font-semibold">Sobre</h4>
-                            <p className="text-sm text-muted-foreground">{ product.description }</p>
+                            <h4 className="font-semibold">
+                                Sobre
+                            </h4>
+                            <p className="text-sm text-muted-foreground">
+                                {product.description}
+                            </p>
                         </div>
                         {/* Ingredients */}
                         <div className="mt-6 space-y-3">
                             <div className="flex items-center gap-1">
-                                <h4 className="font-semibold">Ingredients</h4>
+                                <h4 className="font-semibold">
+                                    Ingredients
+                                </h4>
                                 <ChefHatIcon size={18}/>
                             </div>
                             <ul className="h-[240px] list-disc px-5 text-sm text-muted-foreground">
