@@ -2,12 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ConsumptionMethod } from "@prisma/client";
+import { loadStripe } from "@stripe/stripe-js";
 import { Loader2Icon } from "lucide-react";
 import { useParams, useSearchParams } from "next/navigation";
 import { useContext, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
-import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { createOrder } from "../actions/create-order";
+import { createStripeCheckout } from "../actions/create-stripe-checkout";
 import { CartContext } from "../contexts/cart";
 import { isValidCpf } from "../helpers/cpf";
 
@@ -61,7 +62,7 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 const FinishOrderDialog = ({ open, onOpenChange }: IFinishOrderDialogProps) => {
-  const [isPending, startTransition] = useTransition();
+  const [isPending] = useTransition();
 
   const { slug } = useParams<{ slug: string }>();
 
@@ -83,16 +84,23 @@ const FinishOrderDialog = ({ open, onOpenChange }: IFinishOrderDialogProps) => {
         "consumptionMethod",
       ) as ConsumptionMethod;
 
-      startTransition(async () => {
-        await createOrder({
-          consumptionMethod,
-          customerCpf: data.cpf,
-          customerName: data.name,
-          products,
-          slug,
-        });
-        onOpenChange(false);
-        toast.success("Pedido realizado com sucesso!");
+      const order = await createOrder({
+        consumptionMethod,
+        customerCpf: data.cpf,
+        customerName: data.name,
+        products,
+        slug,
+      });
+      const { sessionId } = await createStripeCheckout({
+        orderId: order.id,
+        products,
+      });
+      if (!process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY) return;
+      const stripe = await loadStripe(
+        process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY,
+      );
+      stripe?.redirectToCheckout({
+        sessionId: sessionId,
       });
     } catch (error) {
       console.log(error);
@@ -161,7 +169,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: IFinishOrderDialogProps) => {
                     className="rounded-full"
                     disabled={isPending}
                   >
-                    { isPending && <Loader2Icon className="animate-spin"/>}
+                    {isPending && <Loader2Icon className="animate-spin" />}
                     Finalizar
                   </Button>
                   <DrawerClose asChild>

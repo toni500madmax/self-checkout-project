@@ -2,7 +2,7 @@
 
 import { ConsumptionMethod } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { notFound, redirect } from "next/navigation";
+import { notFound /* redirect */ } from "next/navigation";
 
 import { db } from "@/lib/prisma";
 
@@ -43,7 +43,7 @@ export const createOrder = async (input: ICreateOrderInput) => {
     price: productsWithPrices.find((p) => p.id === product.id)!.price,
   }));
 
-  await db.order.create({
+  const order = await db.order.create({
     data: {
       consumptionMethod: input.consumptionMethod,
       status: "PENDING",
@@ -62,5 +62,8 @@ export const createOrder = async (input: ICreateOrderInput) => {
     },
   });
   revalidatePath(`/${input.slug}/orders`);
-  redirect(`/${input.slug}/orders?cpf=${removeCpfPonctuation(input.customerCpf)}`);
+  /* redirect(
+    `/${input.slug}/orders?cpf=${removeCpfPonctuation(input.customerCpf)}`,
+  ); */
+  return order;
 };
