@@ -5,7 +5,7 @@ import { ConsumptionMethod } from "@prisma/client";
 import { loadStripe } from "@stripe/stripe-js";
 import { Loader2Icon } from "lucide-react";
 import { useParams, useSearchParams } from "next/navigation";
-import { useContext, useTransition } from "react";
+import { useContext, useState /* useTransition */ } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 import { z } from "zod";
@@ -62,7 +62,9 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 const FinishOrderDialog = ({ open, onOpenChange }: IFinishOrderDialogProps) => {
-  const [isPending] = useTransition();
+  //! const [isPending] = useTransition();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const { slug } = useParams<{ slug: string }>();
 
@@ -80,6 +82,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: IFinishOrderDialogProps) => {
 
   const onSubmit = async (data: FormSchema) => {
     try {
+      setIsLoading(true);
       const consumptionMethod = searchParams.get(
         "consumptionMethod",
       ) as ConsumptionMethod;
@@ -94,6 +97,9 @@ const FinishOrderDialog = ({ open, onOpenChange }: IFinishOrderDialogProps) => {
       const { sessionId } = await createStripeCheckout({
         orderId: order.id,
         products,
+        slug,
+        consumptionMethod,
+        cpf: data.cpf,
       });
       if (!process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY) return;
       const stripe = await loadStripe(
@@ -104,6 +110,8 @@ const FinishOrderDialog = ({ open, onOpenChange }: IFinishOrderDialogProps) => {
       });
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -167,9 +175,9 @@ const FinishOrderDialog = ({ open, onOpenChange }: IFinishOrderDialogProps) => {
                   <Button
                     variant="destructive"
                     className="rounded-full"
-                    disabled={isPending}
+                    disabled={isLoading}
                   >
-                    {isPending && <Loader2Icon className="animate-spin" />}
+                    {isLoading && <Loader2Icon className="animate-spin" />}
                     Finalizar
                   </Button>
                   <DrawerClose asChild>
